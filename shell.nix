@@ -25,7 +25,11 @@ pkgs.mkShell {
     if [ ! -f .config/default.yml ]; then
       echo "🔧 First time? Run 'misskey setup' to initialize the environment"
     fi
-    trap 'misskey stop' EXIT
+
+    # Only set trap when not using direnv
+    if [ -z "$DIRENV_IN_ENVRC" ]; then
+      trap 'misskey stop' EXIT
+    fi
 
     # Development environment
     export NODE_ENV="development"
@@ -45,7 +49,7 @@ pkgs.mkShell {
   # Ensure consistent locale settings
   LANG = "en_US.UTF-8";
 
-  # Prevent PostgreSQL encoding issues
+  # PostgreSQL settings
   PGDATA = "$(pwd)/data/postgres";
   PGHOST = "localhost";
   PGUSER = "taka";
