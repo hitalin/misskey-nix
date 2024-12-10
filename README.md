@@ -1,4 +1,4 @@
-# misskey-nix
+# nix-misskey
 
 This project uses Nix for development environment management.
 
@@ -16,9 +16,9 @@ echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf
 ```bash
 git clone --recursive https://github.com/your-username/misskey.git
 cd misskey
-git submodule add https://github.com/your-username/misskey-nix.git .misskey-nix
+git submodule add https://github.com/your-username/nix-misskey.git .nix-misskey
 git submodule update --init --recursive
-nix develop ./.misskey-nix#default
+nix develop ./.nix-misskey#default
 misskey setup
 misskey start
 ```
