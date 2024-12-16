@@ -9,8 +9,8 @@ pkgs.writeTextFile {
       host: "localhost"
       port: 5433
       db: "misskey"
-      user: "${builtins.getEnv "USER"}"
-      pass: ""
+      user: "postgres"
+      pass: "postgres"
     redis:
       host: "localhost"
       port: 6379

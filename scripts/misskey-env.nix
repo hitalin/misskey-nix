@@ -11,8 +11,9 @@ pkgs.writeShellScriptBin "nix-misskey" ''
   export PORT="3000"
   export PGDATA="$(pwd)/data/postgres"
   export PGHOST="localhost"
-  export PGUSER="${builtins.getEnv "USER"}"
   export PGDATABASE="misskey"
+  export PGUSER="postgres"
+  export PGPASSWORD="postgres"
   export PGPORT="5433"
   export LC_ALL="C"
   export LANG="C"
@@ -27,14 +28,32 @@ pkgs.writeShellScriptBin "nix-misskey" ''
     sleep 2
     rm -rf "$PGDATA"
     mkdir -p "$PGDATA"
-    initdb -D "$PGDATA" --auth=trust --no-locale --encoding=UTF8 || error "Failed to initialize PostgreSQL"
+
+    # Initialize with postgres user and password
+    echo "postgres" > /tmp/postgres_pwd
+    initdb -D "$PGDATA" --auth=md5 --no-locale --encoding=UTF8 \
+           --username=postgres \
+           --pwfile=/tmp/postgres_pwd || error "Failed to initialize PostgreSQL"
+    rm /tmp/postgres_pwd
+
     echo "${configs.postgres.postgresql}" > "$PGDATA/postgresql.conf"
-    echo "${configs.postgres.pg_hba}" > "$PGDATA/pg_hba.conf"
+    echo "${configs.postgres.pg_hba}" > "$PGDATA/pg_hba.conf" 
+
+    # Start PostgreSQL with proper checks
     mkdir -p "$PGDATA/log"
     pg_ctl -D "$PGDATA" -l "$PGDATA/log/postgresql.log" start || error "Failed to start PostgreSQL"
-    sleep 3
-    pg_isready -p 5433 || error "PostgreSQL is not responding"
-    createdb -p 5433 misskey || error "Failed to create database"
+    
+    # Wait for PostgreSQL to be ready
+    for i in {1..30}; do
+      if pg_isready -h localhost -p 5433; then
+        break
+      fi
+      sleep 1
+    done
+
+    # Create database only (no need to create user since we use postgres)
+    createdb -h localhost -p 5433 -U postgres misskey || error "Failed to create database"
+
     success "PostgreSQL initialized"
   }
 
