@@ -20,15 +20,15 @@ pkgs.mkShell {
   shellHook = ''
     echo "🚀 Welcome to Misskey development environment"
     echo
-    echo "Type 'misskey' to see available commands"
+    echo "Type 'nix-misskey' to see available commands"
     echo
     if [ ! -f .config/default.yml ]; then
-      echo "🔧 First time? Run 'misskey setup' to initialize the environment"
+      echo "🔧 First time? Run 'nix-misskey setup' to initialize the environment"
     fi
 
     # Only set trap when not using direnv
     if [ -z "$DIRENV_IN_ENVRC" ]; then
-      trap 'misskey stop' EXIT
+      trap 'nix-misskey stop' EXIT
     fi
 
     # Development environment

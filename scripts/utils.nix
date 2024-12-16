@@ -14,7 +14,7 @@
     show_help() {
       echo "Misskey Development Environment"
       echo
-      echo "Usage: misskey <command>"
+      echo "Usage: nix-misskey <command>"
       echo
       echo "Commands:"
       echo "  setup   - Initial setup"

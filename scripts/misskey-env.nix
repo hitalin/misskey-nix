@@ -3,7 +3,7 @@
 let
   utils = import ./utils.nix { inherit pkgs; };
 in
-pkgs.writeShellScriptBin "misskey" ''
+pkgs.writeShellScriptBin "nix-misskey" ''
   # Environment variables
   export NODE_ENV="development"
   export VITE_PORT="5173"
