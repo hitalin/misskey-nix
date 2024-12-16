@@ -52,7 +52,7 @@ pkgs.mkShell {
   # PostgreSQL settings
   PGDATA = "$(pwd)/data/postgres";
   PGHOST = "localhost";
-  PGUSER = "taka";
+  PGUSER = "${builtins.getEnv "USER"}";
   PGDATABASE = "misskey";
   PGPORT = "5433";
 }

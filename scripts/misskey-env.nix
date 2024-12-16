@@ -11,7 +11,7 @@ pkgs.writeShellScriptBin "nix-misskey" ''
   export PORT="3000"
   export PGDATA="$(pwd)/data/postgres"
   export PGHOST="localhost"
-  export PGUSER="taka"
+  export PGUSER="${builtins.getEnv "USER"}"
   export PGDATABASE="misskey"
   export PGPORT="5433"
   export LC_ALL="C"
